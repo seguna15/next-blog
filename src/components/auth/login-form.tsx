@@ -6,6 +6,9 @@ import {z} from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 //schema
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -16,7 +19,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 
 function LoginForm() {
-
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   //initialize form
@@ -33,9 +36,26 @@ function LoginForm() {
   const onLoginSubmit = async(values: LoginFormValues) => {
     setIsLoading(true)
     try {
-      console.log(values)
+      const {error} = await signIn.email({
+        email: values.email,
+        password: values.password,
+        rememberMe: true
+      })
+
+      if(error){
+        toast('Failed to login. Please try again')
+        return
+      }
+
+      toast('Logged in successfully')
+      router.push('/')
+      form.reset()
+     
     } catch (error) {
       console.log(error)
+    }finally{
+      setIsLoading(false)
+    
     }
   }
 
