@@ -7,7 +7,7 @@ export default function PostCard({post}: PostCardProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <Link className="hover:underline" href={`/post/${post.id}`}>
+        <Link className="hover:underline" href={`/post/${post.slug}`}>
           <CardTitle className="text-2xl">{post.title}</CardTitle>
         </Link>
         <CardDescription>
